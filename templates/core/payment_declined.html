@@ -1,0 +1,24 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+
+    {% include 'layout/navbar.html' %}
+   <div class="tx-flex tx-h-screen tx-justify-center tx-items-center">
+        <div class="tx-bg-auth_img tx-p-5  md:tx-mx-auto tx-rounded-md shadow-sm">
+            <img src="{% static 'assests/declined.svg' %}" alt="logo" class="tx-w-20  tx-mx-auto">
+            <div class=tx-text-center">
+                <h3 class="md:tx-text-2xl tw-text-base tx-text-gray-900 tx-font-semibold tx-text-center">Payment Failed!</h3>
+                <p class="tx-text-gray-600 tx-my-2">This transactions failed, Will you try again ?</p>
+                <p class="tx-text-center"> Have a great day! </p>
+                <div class="tx-py-10 tx-text-center">
+                    <a href="#" class="tw-px-12 tx-bg-secondary hover:bg-indigo-500 text-white font-semibold py-3">
+                        GO BACK
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'layout/footer.html' %}
+{% endblock %}
+

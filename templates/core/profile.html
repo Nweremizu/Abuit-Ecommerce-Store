@@ -1,0 +1,207 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+{% load humanize %}
+{% block title %}
+    Account
+{% endblock %}
+{% block content %}
+    {% include 'layout/navbar.html' %}
+    <section class="tz-flex tz-h-screen tz-py-16">
+        <div class="tz-flex tz-flex-col tz-gap-8 tz-items-center tz-w-full tz-font-primary">
+            <h1 class="tz-text-3xl">My Account</h1>
+            <div class="tz-flex tz-flex-col md:tz-flex-row tz-gap-4 tz-w-full md:tz-px-20 lg:tz-px-48 tz-divide-x ">
+                <div
+                        class="tz-flex tz-flex-row md:tz-flex-col  md:tz-w-1/4 tz-font-medium tz-w-full tz-justify-center md:tz-justify-start">
+                    <div class="tz-px-6 tz-py-3 active">
+                        Overview
+                    </div>
+                    <div class="tz-px-6 tz-py-3 inactive">
+                        Orders
+                    </div>
+                </div>
+                <div class="tz-w-full md:tz-w-3/4">
+                    <div class="tz-flex tz-flex-col tz-gap-3" id="overview">
+                        <div class="tz-px-6 tz-py-3 tz-flex tz-flex-col tz-gap-8">
+                            <div class="tz-flex tz-justify-between tz-w-full">
+                                <h1 class="tz-text-4xl">Welcome {{ user.username }}</h1>
+                                <button id="edit"
+                                        class="tz-py-2 tz-px-4 tz-border-2 tz-border-transparent tz-bg-auth_btn tz-transition-all tz-ease-in tz-text-white hover:tz-border-2 hover:tz-border-black tz-duration-500">
+                                    Edit
+                                    Details
+                                </button>
+                            </div>
+                            <div class="tz-flex tz-flex-col md:tz-flex-row tz-gap-20">
+                                <div class="tz-flex tz-flex-col tz-gap-4 tz-w-full">
+                                    <div class="tz-flex tz-flex-col tz-gap-1">
+                                        <label for="username" class="tz-font-medium">Username</label>
+                                        <input type="text" id="username" class=" tz-px-4 tz-py-2 tz-border tz-border-black
+                                            focus:tz-border-2 focus:tz-border-primary focus:tz-outline-none"
+                                               value="{{ user.username }}" disabled>
+                                    </div>
+                                    <div class="tz-flex tz-flex-col tz-gap-1">
+                                        <label for="email" class="tz-font-medium">Email</label>
+                                        <input type="text" id="email"
+                                               class=" tz-px-4 tz-py-2 tz-border tz-border-black focus:tz-border-2 focus:tz-border-primary focus:tz-outline-none"
+                                               value="{{ user.email }}" disabled>
+                                    </div>
+                                </div>
+                                <div class="tz-flex tz-flex-col tz-gap-4 tz-w-full">
+
+                                    <div class="tz-flex tz-flex-col tz-gap-1">
+                                        <label for="fname" class="tz-font-medium">FirstName</label>
+                                        <input type="text" id="fname" class="tz-px-4 tz-py-2 tz-border tz-border-black
+                                        focus:tz-border-2 focus:tz-border-primary focus:tz-outline-none"
+                                               value="{{ user.first_name }}" disabled>
+                                    </div>
+                                    <div class="tz-flex tz-flex-col tz-gap-1">
+                                        <label for="lname" class="tz-font-medium">LastName</label>
+                                        <input type="text" id="lname"
+                                               class="tz-px-4 tz-py-2 tz-border tz-border-black focus:tz-border-2 focus:tz-border-primary focus:tz-outline-none"
+                                               value="{{ user.last_name }}" disabled>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <h1>Shipping Details</h1>
+                            <div class="tz-grid tz-grid-cols-2 tz-gap-3">
+
+                                <div class="tz-flex tz-flex-col tz-gap-1">
+                                    <label for="phone-no" class="tz-font-medium">Phone Number</label>
+                                    <input type="number" id="phone-no"
+                                           class=" tz-px-4 tz-py-2 tz-border tz-border-black
+                                        focus:tz-border-2 focus:tz-border-primary focus:tz-outline-none !tz-appearance-none"
+                                           value="" disabled>
+                                </div>
+                                <div class="tz-flex tz-flex-col tz-gap-1">
+                                    <label for="Address" class="tz-font-medium">Address Line</label>
+                                    <input type="text" id="Address" class=" tz-px-4 tz-py-2 tz-border tz-border-black
+                                        focus:tz-border-2 focus:tz-border-primary focus:tz-outline-none" value=""
+                                           disabled>
+                                </div>
+                                <div class="tz-flex tz-flex-col tz-gap-1">
+                                    <label for="country" class="tz-font-medium">Country</label>
+                                    <input type="text" id="country" class=" tz-px-4 tz-py-2 tz-border tz-border-black
+                                        focus:tz-border-2 focus:tz-border-primary focus:tz-outline-none" value=""
+                                           disabled>
+                                </div>
+                                <div class="tz-flex tz-flex-col tz-gap-1">
+                                    <label for="city" class="tz-font-medium">City</label>
+                                    <input type="text" id="city" class=" tz-px-4 tz-py-2 tz-border tz-border-black
+                                        focus:tz-border-2 focus:tz-border-primary focus:tz-outline-none" value=""
+                                           disabled>
+                                </div>
+                                <div class="tz-flex tz-flex-col tz-gap-1">
+                                    <label for="state" class="tz-font-medium">State</label>
+                                    <input type="text" id="state" class=" tz-px-4 tz-py-2 tz-border tz-border-black
+                                        focus:tz-border-2 focus:tz-border-primary focus:tz-outline-none" value=""
+                                           disabled>
+                                </div>
+                                <div class="tz-flex tz-flex-col tz-gap-1">
+                                    <label for="postal-code" class="tz-font-medium">Postal Code</label>
+                                    <input type="number" id="postal-code"
+                                           class=" tz-px-4 tz-py-2 tz-border tz-border-black
+                                        focus:tz-border-2 focus:tz-border-primary focus:tz-outline-none tz-appearance-none"
+                                           value="" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tz-flex tz-w-full tz-justify-end tz-px-6 ">
+                            <button id="save"
+                                    class="tz-hidden tz-py-2 tz-px-4 tz-border-2 tz-border-transparent tz-bg-auth_btn  tz-text-white ">
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                    <div class="tz-hidden tz-flex-col tz-gap-3" id="orders">
+                        <div class="md:tz-px-6 tz-py-3 tz-flex tz-flex-col tz-gap-8">
+                            <h1 class="tz-text-4xl">Your Orders</h1>
+                            <table class="tz-table-auto">
+                                <thead class="tz-bg-zinc-300 tz-rounded-t">
+                                <tr>
+                                    <th>
+                                        S/N.
+                                    </th>
+                                    <th>
+                                        Invoice Number
+                                    </th>
+                                    <th>
+                                        Book
+                                    </th>
+                                    <th>
+                                        Quantity
+                                    </th>
+                                    <th>
+                                        Price
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody class="tz-divide-y">
+                                <tr>
+                                    <td>1.</td>
+                                    <td>Invoice-No-58</td>
+                                    <td>Atomic Habits</td>
+                                    <td>2</td>
+                                    <td>₦10000</td>
+                                </tr>
+                                <tr>
+                                    <td>2.</td>
+                                    <td>Invoice-No-58</td>
+                                    <td>Atomic Habits</td>
+                                    <td>2</td>
+                                    <td>₦10000</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    {% include 'layout/footer.html' %}
+    <script>
+        // undisabled all input fields if the edit btn is clicked
+        const edit_btn = document.getElementById('edit')
+        const save_btn = document.getElementById('save')
+        edit_btn.addEventListener('click', () => {
+            const inputs = document.querySelectorAll('input')
+            inputs.forEach(input => {
+                input.disabled = false
+            })
+            save_btn.classList.toggle('tz-hidden')
+            save_btn.classList.toggle('tz-flex')
+            edit_btn.classList.toggle('tz-hidden')
+        })
+
+        save_btn.addEventListener('click', () => {
+            const inputs = document.querySelectorAll('input')
+            inputs.forEach(input => {
+                input.disabled = true
+            })
+            edit_btn.classList.toggle('tz-hidden')
+            edit_btn.classList.toggle('tz-flex')
+            save_btn.classList.toggle('tz-hidden')
+        })
+
+
+        const overview = document.getElementById('overview');
+        const orders = document.getElementById('orders');
+        const overviewBtn = document.querySelector('.active');
+        const ordersBtn = document.querySelector('.inactive');
+
+        overviewBtn.addEventListener('click', () => {
+            overview.classList.remove('tz-hidden');
+            orders.classList.add('tz-hidden');
+            overviewBtn.classList.add('active');
+            ordersBtn.classList.remove('active');
+        });
+
+        ordersBtn.addEventListener('click', () => {
+            overview.classList.add('tz-hidden');
+            orders.classList.remove('tz-hidden');
+            overviewBtn.classList.remove('active');
+            ordersBtn.classList.add('active');
+        });
+    </script>
+{% endblock %}

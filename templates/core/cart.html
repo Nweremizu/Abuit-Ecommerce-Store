@@ -1,0 +1,103 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+    {% include 'layout/navbar.html' %}
+    <section class="tx-flex tx-flex-col  tx-py-24 ">
+        <div class="tx-text-center tx-flex tx-flex-col tx-items-center ">
+            <h1 class="tx-font-primary tx-text-xl tx-font-semibold">Cart</h1>
+            <h2 class="tx-font-primary tx-text-sm tx-border-b tx-w-fit"><a href="{% url 'core:books' %}">Continue
+                shopping</a></h2>
+        </div>
+
+        <div class="cart tx-py-14 tx-px-4 xl:tx-px-32 2xl:tx-px-48 tx-flex lg:tx-flex-row tx-flex-col tx-gap-8 the-cart">
+            <div class="tx-flex tx-flex-col tx-divide-y-2 tx-divide-secondary lg:tx-w-8/12 tx-w-full cart-items">
+                {% if cart_data %}
+                    {% for book_id, data in cart_data.items %}
+                        <div class="tx-flex tx-flex-row tx-gap-4 tx-w-full tx-py-5">
+                            <div class="tx-w-48 tx-h-52">
+                                <img src="{{ data.image }}" alt="" class="tx-w-48 tx-h-52 tx-object-cover">
+                            </div>
+                            <div class="tx-flex tx-flex-col tx-justify-between tx-w-full">
+                                <div>
+                                    <a href="{% url 'core:detail' book_id %}"><h3
+                                            class="tx-font-primary tx-text-lg">{{ data.title }}</h3></a>
+                                    <div>
+                                        <span class="tx-font-primary tx-text-sm tx-font-medium">Author:</span>
+                                        <span class="tx-font-primary tx-text-sm">{{ data.author }}</span>
+                                    </div>
+                                    <div>
+                                        <span class="tx-font-primary tx-text-sm tx-font-medium">Category:</span>
+                                        <span class="tx-font-primary tx-text-sm">{{ data.category }}</span>
+                                    </div>
+                                </div>
+                                <div class="tx-flex tx-flex-row tx-justify-between tx-items-center tx-w-full">
+                                    <div class="tx-flex tx-flex-col tx-gap-2">
+                                        <div class="tx-flex tx-flex-row tx-gap-2 tx-w-fit tx-border tx-p-2 tx-border-secondary">
+                                            <button class="tx-btn tx-btn-primary tx-btn-sm" id="cart_quan"
+                                                    data-id="{{ book_id }}"
+                                                    onclick="{{ book_id }}.value = Number({{ book_id }}.value) - 1">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                            <input type='number' class="tx-w-10 focus:tx-outline-none tx-text-center"
+                                                   id="{{ book_id }}"
+                                                   value='{{ data.quantity }}'/>
+                                            <button class="tx-btn tx-btn-primary tx-btn-sm" id="cart_quan"
+                                                    data-id="{{ book_id }}"
+                                                    onclick="{{ book_id }}.value = Number({{ book_id }}.value) + 1">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                        </div>
+                                        <a class="tx-font-primary tx-text-sm delete-item hand"
+                                           data-item="{{ book_id }}">Remove</a>
+                                    </div>
+                                    <div>
+                                        <span class="tx-font-primary tx-font-medium tx-text-sm">₦ {{ data.price|intcomma }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="tw-flex tw-h-full tw-justify-center tw-items-center tw-font-new">
+                        Your Cart is Empty
+                    </div>
+                {% endif %}
+            </div>
+            <div class="lg:tx-w-4/12 tx-w-full">
+                <div class="tx-border-2 tx-border-secondary tx-px-10 tx-py-6">
+                    <h1 class="tx-font-primary tx-text-lg tx-font-medium tx-text-secondary">Order Summary</h1>
+                    <div class="tx-flex tx-flex-col tx-py-4 tx-divide-y">
+                        <div class="tx-flex tx-flex-row tx-justify-between tx-py-3">
+                            <span class="tx-font-primary tx-text-xl tx-text-secondary ">Subtotal:</span>
+                            <span class="tx-font-primary tx-text-xl tx-text-secondary tx-font-semibold">₦ {{ total_cart_price|intcomma }}</span>
+                        </div>
+                        <div class="tx-flex tx-flex-row tx-justify-between tx-py-3">
+                            <span class="tx-font-primary tx-text-xl tx-text-secondary">Total:</span>
+                            <span class="tx-font-primary tx-text-xl tx-text-secondary tx-font-semibold">₦ {{ total_cart_price|intcomma }}</span>
+                        </div>
+                    </div>
+                    <a href="{% url 'core:check-out' %}">
+                        <button
+                                class="tx-group tx-inline-flex tx-w-full tx-items-center tx-justify-center tx-bg-primary tx-px-6 tx-py-4 tx-text-lg tx-font-semibold tx-text-secondary tx-transition-all tx-duration-200 tx-ease-in-out focus:tx-shadow hover:tx-bg-secondary hover:tx-text-primary">
+                            Proceed
+                            to
+                            checkout
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 class="group-hover:tx-ml-8 tx-ml-4 tx-h-6 tx-w-6 tx-transition-all" fill="none"
+                                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                            </svg>
+                        </button>
+                    </a>
+                </div>
+                <div class="tx-flex tx-justify-center tx-py-3">
+                    <span class="tx-text-gray-400 tx-text-sm">Shipping, taxes, and discount codes calculated at
+                        checkout.</span>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% include 'layout/footer.html' %}
+{% endblock %}
+```

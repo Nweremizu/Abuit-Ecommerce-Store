@@ -1,0 +1,66 @@
+{% load static %}
+<div
+        class="tw-relative footer tw-bg-secondary tw-py-20 tw-z-10 tw-px-20 tw-flex tw-flex-col tw-justify-center tw-items-center">
+        <div class="tw-flex tw-flex-col md:tw-flex-row tw-gap-20 tw-border-b tw-pb-7">
+            <div class="tw-flex tw-flex-col tw-gap-4 tw-justify-center tw-items-center">
+                <img src="{% static 'assests/abiut beige .svg' %}" alt="logo">
+                <!-- Social Links -->
+                <div class="tw-flex tw-flex-row tw-gap-6">
+                    <a href="" class="tw-py-2 tw-px-3 tw-border tw-border-primary">
+                        <i class="fa-brands fa-facebook-f tw-text-primary"></i>
+                    </a>
+                    <a href="" class="tw-py-2 tw-px-3 tw-border tw-border-primary">
+                        <i class="fa-brands fa-x-twitter tw-text-primary"></i>
+                    </a>
+                    <a href="" class="tw-py-2 tw-px-3 tw-border tw-border-primary">
+                        <i class="fa-brands fa-linkedin-in tw-text-primary"></i>
+                    </a>
+                    <a href="" class="tw-py-2 tw-px-3 tw-border tw-border-primary">
+                        <i class="fa-brands fa-instagram tw-text-primary"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="tw-flex tw-md:flex-row tw-gap-10">
+                <div class="tw-flex tw-flex-col tw-gap-3">
+                    <h1 class="tw-text-white tw-font-footer">Explore</h1>
+                    <div class="tw-flex tw-flex-row tw-gap-2">
+                        <img src="{% static 'assests/main/nav.svg' %}" alt="nav" class="tw-w-1/4">
+                        <a href="{% url 'core:main' %}" class="!tw-text-footer_link">Home</a>
+                    </div>
+                    <div class="tw-flex tw-flex-row tw-gap-2">
+                        <img src="{% static 'assests/main/nav.svg' %}" alt="nav" class="tw-w-1/4">
+                        <a href="{% url 'core:books' %}" class="!tw-text-footer_link">Books</a>
+                    </div>
+                    <div class="tw-flex tw-flex-row tw-gap-2">
+                        <img src="{% static 'assests/main/nav.svg' %}" alt="nav" class="tw-w-1/4">
+                        <a href="#" class="!tw-text-footer_link">About</a>
+                    </div>
+                    <div class="tw-flex tw-flex-row tw-gap-2">
+                        <img src="{% static 'assests/main/nav.svg' %}" alt="nav" class="tw-w-1/4">
+                        <a href="#" class="!tw-text-footer_link">Contact</a>
+                    </div>
+                </div>
+                <div class="tw-flex tw-flex-col tw-gap-2">
+                    <h1 class="tw-text-white tw-font-footer">Keep in Touch</h1>
+                    <div class="tw-flex tw-flex-row tw-gap-2">
+                        <p class="tw-text-white ">Address: </p>
+                        <p class="tw-text-footer_link">Covenant University, Ota Ogun State, Nigeria</p>
+                    </div>
+                    <div class="tw-flex tw-flex-row tw-gap-1">
+                        <p class="tw-text-white ">Phone:</p>
+                        <p class="tw-text-footer_link">+234 123 456 7890</p>
+                    </div>
+                    <div class="tw-flex tw-flex-row tw-gap-1">
+                        <p class="tw-text-white ">Email:</p>
+                        <p class="tw-text-footer_link">
+                            <a href="mailto:brunex7900@gmail.com"> brunex7900@gmail.com</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- responsive copyright -->
+        <div class="tw-flex tw-flex-col md:tw-flex-row tw-gap-4 tw-justify-center tw-items-center tw-mt-4">
+            <p class="tw-text-white tw-font-secondary">© {{ year }} Abiut. All rights reserved</p>
+        </div>
+    </div>

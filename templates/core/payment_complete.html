@@ -1,0 +1,175 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+
+    {% include 'layout/navbar.html' %}
+    <div class="tx-max-w-[85rem] tx-px-4 sm:tx-px-6 lg:tx-px-8 tx-mx-auto tx-my-4 sm:tx-my-10">
+        <div class="sm:tx-w-11/12 lg:tx-w-3/4 tx-mx-auto">
+            <!-- Card -->
+            <div
+                    class="tx-flex tx-flex-col tx-p-4 sm:tx-p-10 tx-bg-white tx-shadow-md tx-rounded-xl  tx-bg-white mainn "
+                    id="print" style="background-color: #ffffff;">
+                <!-- Grid -->
+                <div class="tx-flex tx-justify-between">
+                    <div class="tx-p-4">
+                        <img src="{% static 'assests/logo.svg' %}" alt="logo" class="tx-w-48">
+                    </div>
+                    <!-- Col -->
+
+                    <div class="tx-text-end">
+                        <h2 class="tx-text-2xl md:tx-text-3xl tx-font-semibold tx-text-gray-800">
+                            Invoice
+                            #</h2>
+                        <span class="tx-mt-1 tx-block tx-text-gray-500">3682303</span>
+
+                        <address class="tx-mt-4 tx-not-italic tx-text-gray-800">
+                            Covenant University<br>
+                            Otaa<br>
+                            Ogun State<br>
+                            Nigeria<br>
+                        </address>
+                    </div>
+                    <!-- Col -->
+                </div>
+                <!-- End Grid -->
+
+                <!-- Grid -->
+                <div class="tx-mt-8 tx-grid sm:tx-grid-cols-2 tx-gap-3">
+                    <div>
+                        <h3 class="tx-text-lg tx-font-semibold tx-text-gray-800 ">Bill
+                            to: {{ request.user.first_name }} {{ request.user.last_name }}</h3>
+                        <address class="tx-mt-2 tx-not-italic tx-text-gray-500">
+                            280 Suzanne Throughway,<br>
+                            Breannabury, OR 45801,<br>
+                            United States<br>
+                        </address>
+                    </div>
+                    <!-- Col -->
+
+                    <div class="sm:tx-text-end tx-space-y-2">
+                        <!-- Grid -->
+                        <div class="tx-grid tx-grid-cols-2 sm:tx-grid-cols-1 tx-gap-3 sm:tx-gap-2">
+                            <dl class="tx-grid sm:tx-grid-cols-5 tx-gap-x-3">
+                                <dt class="tx-col-span-3 tx-font-semibold tx-text-gray-800 ">
+                                    Invoice
+                                    date:
+                                </dt>
+                                <dd class="tx-col-span-2 tx-text-gray-500">03/10/2018</dd>
+                            </dl>
+                            <dl class="tx-grid sm:tx-grid-cols-5 tx-gap-x-3">
+                                <dt class="tx-col-span-3 tx-font-semibold tx-text-gray-800 ">Due
+                                    date:
+                                </dt>
+                                <dd class="tx-col-span-2 tx-text-gray-500">03/11/2018</dd>
+                            </dl>
+                        </div>
+                        <!-- End Grid -->
+                    </div>
+                    <!-- Col -->
+                </div>
+                <!-- End Grid -->
+
+                <!-- Table -->
+                <div class="tx-mt-6">
+                    <div class="tx-border tx-border-gray-200 tx-p-4 tx-rounded-lg tx-space-y-4">
+                        <div class="tx-hidden sm:tx-grid sm:tx-grid-cols-5">
+                            <div class="sm:tx-col-span-2 tx-text-xs tx-font-medium tx-text-gray-500 tx-uppercase">Item
+                            </div>
+                            <div class="tx-text-start tx-text-xs tx-font-medium tx-text-gray-500 tx-uppercase">Qty</div>
+                            <div class="tx-text-start tx-text-xs tx-font-medium tx-text-gray-500 tx-uppercase">Price
+                            </div>
+                            <div class="tx-text-end tx-text-xs tx-font-medium tx-text-gray-500 tx-uppercase">Amount
+                            </div>
+                        </div>
+
+
+                        {% for book_id, data in cart_data.items %}
+                            <div class="tx-hidden sm:tx-block tx-border-b tx-border-gray-200"></div>
+                            <div class="tx-grid tx-grid-cols-3 sm:tx-grid-cols-5 tx-gap-2">
+                                <div class="tx-col-span-full sm:tx-col-span-2">
+                                    <h5 class="sm:tx-hidden tx-text-xs tx-font-medium tx-text-gray-500 tx-uppercase">
+                                        Item
+                                    </h5>
+                                    <p class="tx-font-medium tx-text-gray-800">{{ data.title }}</p>
+                                </div>
+                                <div>
+                                    <h5 class="sm:tx-hidden tx-text-xs tx-font-medium tx-text-gray-500 tx-uppercase">Qty
+                                    </h5>
+                                    <p class="tx-text-gray-800 ">{{ data.quantity }}</p>
+                                </div>
+                                <div>
+                                    <h5 class="sm:tx-hidden tx-text-xs tx-font-medium tx-text-gray-500 tx-uppercase">
+                                        Price
+                                    </h5>
+                                    <p class="tx-text-gray-800">₦ {{ data.price|intcomma }}</p>
+                                </div>
+                                <div>
+                                    <h5 class="sm:tx-hidden tx-text-xs tx-font-medium tx-text-gray-500 tx-uppercase">
+                                        Amount
+                                    </h5>
+                                    <p class="sm:tx-text-end tx-text-gray-800 ">₦ {{ data.total_amount|intcomma }}</p>
+                                </div>
+                            </div>
+                            <div class="sm:tx-hidden tx-border-b tx-border-gray-200 tx-dark:border-gray-700"></div>
+                        {% endfor %}
+
+                    </div>
+                </div>
+                <!-- End Table -->
+
+                <!-- Flex -->
+                <div class="tx-mt-8 tx-flex sm:tx-justify-end">
+                    <div class="tx-w-full tx-max-w-2xl sm:tx-text-end tx-space-y-2">
+                        <!-- Grid -->
+                        <div class="tx-grid tx-grid-cols-2 sm:tx-grid-cols-1 tx-gap-3 sm:tx-gap-2">
+                            <dl class="tx-grid sm:tx-grid-cols-5 tx-gap-x-3">
+                                <dt class="tx-col-span-3 tx-font-semibold tx-text-gray-800">
+                                    Subtotal:
+                                </dt>
+                                <dd class="tx-col-span-2 tx-text-gray-500">₦ {{ total_cart_price|intcomma }}</dd>
+                            </dl>
+
+
+                            <dl class="tx-grid sm:tx-grid-cols-5 tx-gap-x-3">
+                                <dt class="tx-col-span-3 tx-font-semibold tx-text-gray-800">Tax:
+                                </dt>
+                                <dd class="tx-col-span-2 tx-text-gray-500">₦ {{ shipping_cost|intcomma }}</dd>
+                            </dl>
+
+                            <dl class="tx-grid sm:tx-grid-cols-5 tx-gap-x-3">
+                                <dt class="tx-col-span-3 tx-font-semibold tx-text-gray-800">Total:
+                                </dt>
+                                <dd class="tx-col-span-2 tx-text-gray-500">₦ {{ full_total|intcomma }}</dd>
+                            </dl>
+                        </div>
+                        <!-- End Grid -->
+                    </div>
+                </div>
+                <!-- End Flex -->
+
+                <div class="tx-mt-8 sm:tx-mt-12">
+                    <h4 class="tx-text-lg tx-font-semibold tx-text-gray-800">Thank you!</h4>
+                    <p class="tx-text-gray-500">If you have any questions concerning this invoice, use the following
+                        contact information:</p>
+                    <div class="tx-mt-2">
+                        <p class="tx-block tx-text-sm tx-font-medium tx-text-gray-800">
+                            brunex7900@gmail.com</p>
+                        <p class="tx-block tx-text-sm tx-font-medium tx-text-gray-800">+1 (062)
+                            109-9222</p>
+                    </div>
+                </div>
+                <p class="tx-mt-5 tx-text-sm tx-text-gray-500">© {{ year }} Abuit.</p>
+            </div><!-- End Card -->
+            <!--- DOWNLOAD BUTTON -->
+            <div class="tx-mt-8 tx-flex sm:tx-justify-end">
+                <button type="button"
+                        class="tw-w-fit tx-px-5 tx-py-3 tx-bg-secondary tw-text-primary tx-transition-all hand"
+                        onclick="generatePDF();">
+                    Download Invoice
+                </button>
+            </div>
+        </div>
+    </div>
+    {% include 'layout/footer.html' %}
+{% endblock %}

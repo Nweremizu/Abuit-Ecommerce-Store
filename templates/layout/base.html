@@ -1,0 +1,99 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link type="text/css" rel="stylesheet" href="{% static 'output/main.css' %}">
+    <link type="text/css" rel="stylesheet" href="{% static 'output/cart.css' %}">
+    <link type="text/css" rel="stylesheet" href="{% static 'output/main1.css' %}">
+    <!-- Import Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <!-- Font Awesome Js -->
+    <script src="https://kit.fontawesome.com/e5db4d66c0.js" crossorigin="anonymous"></script>
+    <!-- Jquery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <!-- html2canvas library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
+            integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- jsPDF library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
+
+
+
+    <!-- A way to override styles -->
+    <style>
+        {% block style %}{% endblock %}
+    </style>
+
+</head>
+<body>
+{% block content %}
+
+{% endblock %}
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+<script src="{% static 'js/all.js' %}" type="text/javascript"></script>
+<script src="{% static 'js/search.js' %}" type="text/javascript"></script>
+
+<script>
+    let cart_is_empty = {{ request.session.cart_is_empty|safe }};
+    sessionStorage.setItem('cart_is_empty', cart_is_empty['cart_is_empty']);
+</script>
+<script>
+
+    const lenis = new Lenis()
+
+    lenis.on('scroll', (e) => {
+        console.log(e)
+    })
+
+    function raf(time) {
+        lenis.raf(time)
+        requestAnimationFrame(raf)
+    }
+
+    requestAnimationFrame(raf)
+
+
+    let jsPDF = window.jspdf.jsPDF;
+
+    function generatePDF() {
+        let elementHTML = document.querySelector(".mainn");
+
+        // Adjust the scale factor as needed (e.g., 0.5 for 50% scale)
+        let scale = 0.5;
+
+        // Capture the elementHTML into a data URL with the specified scale
+        domtoimage.toPng(elementHTML, {scale: scale})
+            .then(function (dataUrl) {
+                // Create a new jsPDF instance
+                var pdf = new jsPDF('p', 'pt', [elementHTML.clientWidth * scale, elementHTML.clientHeight * scale]);
+
+                // Set background color
+                pdf.rect(0, 0, elementHTML.clientWidth * scale, elementHTML.clientHeight * scale, 'F');
+                pdf.addImage(dataUrl, 'PNG', 0, 0, elementHTML.clientWidth * scale, elementHTML.clientHeight * scale);
+
+                // Save the PDF
+                pdf.save('invoice-{{ request.user }}.pdf');
+            })
+            .catch(function (error) {
+                console.error('Error generating PDF:', error);
+            });
+    }
+
+
+</script>
+<script src="https://unpkg.com/@studio-freight/lenis@1.0.35/dist/lenis.min.js"></script>
+</body>
+</html>

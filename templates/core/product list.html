@@ -1,0 +1,339 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block title %}
+    Books
+{% endblock %}
+
+{% block content %}
+
+    {% include 'layout/navbar.html' %}
+
+    <div class="tw-flex tw-flex-col tw-px-14 xl:tw-px-20 tw-py-10 tw-gap-7">
+        <div class="tw-text-center">
+            <h1 class="tw-font-primary tw-font-light tw-text-2xl md:tw-text-4xl xl:tw-text-6xl">Our Books</h1>
+        </div>
+        <!-- the div to display filters and the div to display products  -->
+        <div class="x2l:tw-px-40">
+            <div class="row">
+                <aside class="col-md-3 tw-hidden md:tw-block">
+                    <div class="tw-flex tw-flex-col !tw-divide-y !tw-divide-opacity-10 tw-divide-black">
+                        <!-- filter-group  .// -->
+                        <article class="filter-group tw-py-4">
+                            <header>
+                                <a href="javascript:void(0)" data-toggle="collapse" data-target="#collapse_2"
+                                   aria-expanded="false"
+                                   class="collapsed tw-flex tw-flex-row-reverse tw-justify-between tw-w-full hand">
+                                    <i class="icon-control fa fa-chevron-down tw-text-sm"></i>
+                                    <h6 class="tw-text-sm tw-tracking-widest">Category</h6>
+                                </a>
+                            </header>
+                            <div class="filter-content collapse" id="collapse_2" style="">
+                                <div class="card-body tw-flex tw-flex-col">
+                                    {% for category in categories %}
+                                        <label class="custom-control custom-checkbox tw-flex tw-gap-2">
+                                            <input type="checkbox" data-filter="category"
+                                                   class="custom-control-input filter-checkbox"
+                                                   value="{{ category.cid }}">
+                                            <div class="custom-control-label">{{ category.title }}
+                                                <b class="badge badge-pill badge-light float-right">120</b>
+                                            </div>
+                                        </label>
+                                    {% endfor %}
+                                </div> <!-- card-body.// -->
+                            </div>
+                        </article> <!-- filter-group .// -->
+                        <article class="filter-group tw-py-4">
+                            <header class="card-header">
+                                <a href="javascript:void(0)" data-toggle="collapse" data-target="#collapse_3"
+                                   aria-expanded="false"
+                                   class="collapsed tw-flex tw-flex-row-reverse tw-justify-between tw-w-full">
+                                    <i class="icon-control fa fa-chevron-down tw-text-sm"></i>
+                                    <h6 class="tw-text-sm tw-tracking-widest">Price range </h6>
+                                </a>
+                            </header>
+                            <div class="filter-content collapse" id="collapse_3" style="">
+                                <div class="card-body">
+                                    <input type="range" class="custom-range mt-2"
+                                           min="{{ min_max_price.price__min }}"
+                                           max="{{ min_max_price.price__max }}" name="range" id="range"
+                                           oninput="max_price.value=this.value"
+                                           value="{{ min_max_price.price__max }}">
+                                    <div class="form-row tw-flex tw-gap-2">
+                                        <div class="form-group col-md-6">
+                                            <label>Min</label>
+                                            <input class="form-control tw-text-sm" id="min_price"
+                                                   min="{{ min_max_price.price__min }}"
+                                                   max="{{ min_max_price.price__max }}"
+                                                   value="{{ min_max_price.price__min }}"
+                                                   placeholder="0" type="number">
+                                        </div>
+                                        <div class="form-group text-right col-md-6">
+                                            <label>Max</label>
+                                            <input class="form-control tw-text-sm" id="max_price"
+                                                   min="{{ min_max_price.price__min }}"
+                                                   max="{{ min_max_price.price__max }}"
+                                                   placeholder="{{ min_max_price.price__max }}" type="number"
+                                                   onkeyup="range.value=this.value"
+                                                   value="{{ min_max_price.price__max }}">
+                                        </div>
+                                    </div> <!-- form-row.// -->
+                                    <button id="filterBtn" class="tw-flex tw-w-full tw-border tw-mt-2 tw-border-transparent tw-bg-auth_btn
+                                            tw-text-white tw-py-1 tw-justify-center">Apply
+                                    </button>
+                                </div><!-- card-body.// -->
+                            </div>
+                        </article> <!-- filter-group .// -->
+                        <article class="filter-group tw-py-4">
+                            <header class="card-header">
+                                <a href="javascript:void(0)" data-toggle="collapse" data-target="#collapse_4"
+                                   aria-expanded="false"
+                                   class="collapsed tw-flex tw-flex-row-reverse tw-justify-between tw-w-full ">
+                                    <i class="icon-control fa fa-chevron-down tw-text-sm"></i>
+                                    <h6 class="tw-text-sm tw-tracking-widest">Author </h6>
+                                </a>
+                            </header>
+                            <div class="filter-content collapse" id="collapse_4" style="">
+                                <div class="card-body mt-2">
+                                    {% for author in authors %}
+                                        <label class="custom-control custom-checkbox tw-flex tw-gap-2">
+                                            <input type="checkbox" data-filter="author" value="{{ author }}"
+                                                   class="filter-checkbox">
+                                            <span class=""> {{ author }} </span>
+                                        </label>
+                                    {% endfor %}
+                                </div><!-- card-body.// -->
+                            </div>
+                        </article> <!-- filter-group .// -->
+                        <article class="filter-group tw-py-2">
+                            <header class="card-header">
+                                <a href="javascript:void(0)" data-toggle="collapse" data-target="#collapse_5"
+                                   aria-expanded="false"
+                                   class="collapsed tw-flex tw-flex-row-reverse tw-justify-between tw-w-full ">
+                                    <i class="icon-control fa fa-chevron-down tw-text-sm"></i>
+                                    <h6 class="tw-text-sm tw-tracking-widest">Availability</h6>
+                                </a>
+                            </header>
+                            <div class="filter-content collapse in" id="collapse_5" style="">
+                                <div class="card-body tw-flex tw-flex-col mt-2">
+                                    <label class="custom-control custom-radio tw-flex tw-gap-1">
+                                        <input type="radio" name="myfilter_radio" id="radio"
+                                               class="custom-control-input" value="1" checked="true">
+                                        <div class="custom-control-label">In Stock</div>
+                                    </label>
+
+                                    <label class="custom-control custom-radio tw-flex tw-gap-1">
+                                        <input type="radio" name="myfilter_radio" id="radio"
+                                               class="custom-control-input" value="0">
+                                        <div class="custom-control-label">Out Of Stock</div>
+                                    </label>
+
+
+                                </div><!-- card-body.// -->
+                            </div>
+                        </article> <!-- filter-group .// -->
+                    </div> <!-- card.// -->
+
+                </aside> <!-- col.// -->
+                <main class="col-md-9">
+
+                    <!-- SideBar -->
+                    <header class="border-bottom mb-4 pb-3">
+                        <div class="form-inline tw-flex tw-items-center md:tw-justify-between">
+                            <div class="tw-flex md:tw-hidden tw-w-full">
+                                <!-- filter Sidebar button -->
+                                <div class="tw-flex tw-flex-col tw-justify-center tw-items-center tw-mr-2 tw-w-full">
+                                    <button
+                                            class="filter-btn tw-flex tw-py-2 tw-px-4 tw-gap-2 tw-border tw-border-secondary tw-font-primary !tw-text-secondary tw-justify-start tw-w-full"
+                                            onclick="togglefilter">
+                                        <img src="{% static 'assests/filter.svg' %}" alt="filter" class="tw-w-5">
+                                        <span class="tw-text-sm tw-font-primary">Filter</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- filter sidebar -->
+                            <div class="tw-block md:tw-hidden sidefilter tw-bg-white tw-font-primary">
+                                <div class="tw-bg-white tw-h-full ">
+                                    <ul class="tw-flex flex-column !tw-px-4">
+                                        <div class="text-dark tw-font-primary h4 m-0 px-4 py-4 tw-relative text-center">
+                                            Filter
+                                            <div class="d-inline tw-absolute tw-right-3" onclick="togglefilter()"><i
+                                                    class="fa-solid fa-xmark tw-font-extralight"></i></div>
+                                        </div>
+                                        <div
+                                                class="tw-flex tw-flex-col !tw-divide-y !tw-divide-opacity-10 tw-divide-black tw-px-4">
+                                            <!-- filter-group  .// -->
+                                            <article class="filter-group tw-py-4">
+                                                <header>
+                                                    <a href="javascript:void(0)" data-toggle="collapse" data-target="#collapse_2"
+                                                       aria-expanded="false"
+                                                       class="collapsed tw-flex tw-flex-row-reverse tw-justify-between tw-w-full ">
+                                                        <i class="icon-control fa fa-chevron-down tw-text-sm"></i>
+                                                        <h6 class="tw-text-sm tw-tracking-widest">Category</h6>
+                                                    </a>
+                                                </header>
+                                                <div class="filter-content collapse" id="collapse_2" style="">
+                                                    <div class="card-body tw-flex tw-flex-col">
+                                                        {% for category in categories %}
+                                                            <label class="custom-control custom-checkbox tw-flex tw-gap-2">
+                                                                <input type="checkbox" data-filter="category"
+                                                                       class="custom-control-input filter-checkbox"
+                                                                       value="{{ category.cid }}">
+                                                                <div class="custom-control-label">{{ category.title }}
+                                                                    <b class="badge badge-pill badge-light float-right">120</b>
+                                                                </div>
+                                                            </label>
+                                                        {% endfor %}
+                                                    </div> <!-- card-body.// -->
+                                                </div>
+                                            </article> <!-- filter-group .// -->
+                                            <article class="filter-group tw-py-4">
+                                                <header class="card-header">
+                                                    <a href="javascript:void(0)" data-toggle="collapse" data-target="#collapse_3"
+                                                       aria-expanded="false"
+                                                       class="collapsed tw-flex tw-flex-row-reverse tw-justify-between tw-w-full">
+                                                        <i class="icon-control fa fa-chevron-down tw-text-sm"></i>
+                                                        <h6 class="tw-text-sm tw-tracking-widest">Price range </h6>
+                                                    </a>
+                                                </header>
+                                                <div class="filter-content collapse" id="collapse_3" style="">
+                                                    <div class="card-body">
+                                                        <input type="range" class="custom-range mt-2"
+                                                               min="{{ min_max_price.price__min }}"
+                                                               max="{{ min_max_price.price__max }}" name="range"
+                                                               id="m_range" oninput="m_max_price.value=this.value"
+                                                               value="{{ min_max_price.price__max }}">
+                                                        <div class="form-row tw-flex tw-gap-2">
+                                                            <div class="form-group col-md-6">
+                                                                <label>Min</label>
+                                                                <input class="form-control tw-text-sm"
+                                                                       id="m_min_price"
+                                                                       min="{{ min_max_price.price__min }}"
+                                                                       max="{{ min_max_price.price__max }}"
+                                                                       value="{{ min_max_price.price__min }}"
+                                                                       placeholder="0" type="number">
+                                                            </div>
+                                                            <div class="form-group text-right col-md-6">
+                                                                <label>Max</label>
+                                                                <input class="form-control tw-text-sm"
+                                                                       id="m_max_price"
+                                                                       min="{{ min_max_price.price__min }}"
+                                                                       max="{{ min_max_price.price__max }}"
+                                                                       placeholder="{{ min_max_price.price__max }}"
+                                                                       type="number"
+                                                                       onkeyup="m_range.value=this.value"
+                                                                       value="{{ min_max_price.price__max }}">
+                                                            </div>
+                                                        </div> <!-- form-row.// -->
+                                                        <button id="m_filterBtn" type="button" class="tw-flex tw-w-full tw-border tw-mt-2 tw-border-transparent tw-bg-auth_btn
+                                            tw-text-white tw-py-1 tw-justify-center">Apply
+                                                        </button>
+                                                    </div><!-- card-body.// -->
+                                                </div>
+                                            </article> <!-- filter-group .// -->
+                                            <article class="filter-group tw-py-4">
+                                                <header class="card-header">
+                                                    <a href="javascript:void(0)" data-toggle="collapse" data-target="#collapse_4"
+                                                       aria-expanded="false"
+                                                       class="collapsed tw-flex tw-flex-row-reverse tw-justify-between tw-w-full ">
+                                                        <i class="icon-control fa fa-chevron-down tw-text-sm"></i>
+                                                        <h6 class="tw-text-sm tw-tracking-widest">Author </h6>
+                                                    </a>
+                                                </header>
+                                                <div class="filter-content collapse" id="collapse_4" style="">
+                                                    <div class="card-body mt-2">
+                                                        {% for author in authors %}
+                                                            <label class="custom-control custom-checkbox tw-flex tw-gap-2">
+                                                                <input type="checkbox" data-filter="author"
+                                                                       value="{{ author }}" class="filter-checkbox">
+                                                                <span class=""> {{ author }} </span>
+                                                            </label>
+                                                        {% endfor %}
+                                                    </div><!-- card-body.// -->
+                                                </div>
+                                            </article> <!-- filter-group .// -->
+                                            <article class="filter-group tw-py-2">
+                                                <header class="card-header">
+                                                    <a href="javascript:void(0)" data-toggle="collapse" data-target="javascript:void(0)collapse_5"
+                                                       aria-expanded="false"
+                                                       class="collapsed tw-flex tw-flex-row-reverse tw-justify-between tw-w-full ">
+                                                        <i class="icon-control fa fa-chevron-down tw-text-sm"></i>
+                                                        <h6 class="tw-text-sm tw-tracking-widest">Availability</h6>
+                                                    </a>
+                                                </header>
+                                                <div class="filter-content collapse in" id="collapse_5" style="">
+                                                    <div class="card-body tw-flex tw-flex-col mt-2">
+                                                        <label class="custom-control custom-radio tw-flex tw-gap-1">
+                                                            <input type="radio" name="myfilter_radio" id="radio"
+                                                                   class="custom-control-input" value="1" checked>
+                                                            <div class="custom-control-label">In Stock</div>
+                                                        </label>
+
+                                                        <label class="custom-control custom-radio tw-flex tw-gap-1">
+                                                            <input type="radio" name="myfilter_radio" id="radio"
+                                                                   class="custom-control-input" value="0">
+                                                            <div class="custom-control-label">Out Of Stock</div>
+                                                        </label>
+
+
+                                                    </div><!-- card-body.// -->
+                                                </div>
+                                            </article> <!-- filter-group .// -->
+                                        </div> <!-- card.// -->
+                                    </ul>
+                                </div>
+                            </div>
+                            <span class="tw-hidden md:tw-flex mr-md-auto">{{ Books.count }} Item{{ Books.count | pluralize }} found </span>
+                            <select
+                                    class="mr-2 form-control !tw-border !tw-border-secondary tw-w-full md:tw-w-fit !tw-rounded-none">
+                                <option>Latest items</option>
+                                <option>Cheapest</option>
+                            </select>
+                        </div>
+                    </header>
+
+                    <div class="tw-grid md:tw-grid-cols-2 xl:tw-grid-cols-3 gap-4 " id="filtered-products">
+                        {% for Book in Books %}
+                            <div class="tw-flex tw-flex-col tw-p-2 tw-border tw-border-secondary">
+                                <a href="{% url 'core:detail' Book.bid %}">
+                                    <!-- Image Holder -->
+                                    <div class="tw-flex tw-justify-center tw-bg-primary tw-py-10">
+                                        <img src="{{ Book.image.url }}" alt="book1" class="tw-w-1/2">
+                                    </div>
+                                    <div class="tw-flex tw-flex-row tw-px-3 tw-py-3 tw-gap-1">
+                                        <div class="tw-w-full md:tw-w-90">
+                                            <div class="pr-1">
+                                                <h1 class="tw-font-secondary tw-font-medium tw-text-xl  tw-border-b tw-pb-2 ">
+                                                    {{ Book.title }}</h1>
+                                            </div>
+                                            <p class="tw-font-new  tw-text-sm tw-text-gray-500">{{ Book.author | upper }}</p>
+                                        </div>
+                                        <div class="tw-flex tw-flex-col tw-justify-start tw-items-end tw-ml-auto tw-w-6/12">
+                                        <span class="tw-font-primary tw-font-medium tw-text-base md:tw-text-base tw-text-price ">₦
+                                            {{ Book.price }}
+                                        </span>
+                                        </div>
+                                    </div>
+                                    <div class="tw-flex tw-w-full align-content-end mt-auto">
+                                        <a href="javascript:void(0)" data-id="{{ Book.bid }}" data-author="{{ Book.author }}"
+                                    data-title="{{ Book.title }}" data-category="{{ Book.category.title }}"
+                                    data-price="{{ Book.price }}"
+                                    data-image="{{ Book.image.url }}" data-url="{% url 'core:add-to-cart' %}" id="cart_btn"
+                                           class="tw-flex tw-px-4 tw-py-1 tw-border tw-border-secondary tw-font-primary hover:tw-bg-secondary !tw-text-secondary tw-justify-center hover:!tw-text-primary tw-w-full tw-transition-all tw-duration-500">
+                                            Shop Now
+                                        </a>
+                                    </div>
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+
+                </main> <!-- col.// -->
+
+            </div>
+
+        </div>
+    </div>
+    {% include 'layout/footer.html' %}
+{% endblock %}

@@ -1,0 +1,12 @@
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} py-2 mb-0">
+            <small>{{ message }}</small>
+        </div>
+    {% endfor %}
+{% endif %}
+<script>
+    setTimeout(() => {
+        $(".alert").alert('close')
+    }, 9000)
+</script>

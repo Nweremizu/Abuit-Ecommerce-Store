@@ -1,0 +1,49 @@
+{% load humanize %}
+{% load static %}
+<div class="tw-flex flex-column !tw-px-4">
+    <div class="text-dark tw-font-primary h4 m-0 px-4 py-4 tw-relative text-center">
+        Cart
+        <div class="d-inline tw-absolute tw-right-3" onclick="toggleCart()"><i
+                class="fa-solid fa-xmark tw-font-extralight"></i></div>
+    </div>
+    <div class="tw-flex flex-column !tw-divide-y tw-gap-2 tw-divide-black ">
+        {% for book_id, data in cart_data.items %}
+            <div class="d-flex flex-row tw-gap-4 !tw-text-inherit pt-3">
+
+                <div class="col-4 tw-bg-primary tw-flex tw-justify-center tw-items-center">
+                    <img class="img-fluid" src="{{ data.image }}" alt="" width="60">
+                </div>
+                <div class="tw-flex tw-flex-col tw-w-full">
+                    <p class="tw-font-primary tw-text-lg"><a href="{{ book_id }}">{{ data.title }}</a></p>
+                    <div class="tw-text-[11.9px] tw-flex tw-flex-col tw-font-new tw-justify-start">
+                        <p class="tw-font-bold tw-mb-0">Author: <span
+                                class="!tw-font-normal">{{ data.author|upper }}</span>
+                        </p>
+                        <p class="!tw-font-bold tw-mb-0">Category: <span
+                                class="!tw-font-normal">{{ data.category }}</span>
+                        </p>
+                    </div>
+                    <div class="tw-flex tw-flex-row tw-justify-between mt-4 tw-items-center">
+                        <div></div>
+                        <span>₦ {{ data.price|intcomma }} x {{ data.quantity }}</span>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+<div class="tw-flex tw-justify-between tw-w-full tw-px-4 tw-py-4">
+    <span class="tw-text-sm tw-tracking-wider tw-font-new tw-font-normal">SUBTOTAL</span>
+
+    <span class="tw-text-sm">₦ {{ total_cart_price }}</span>
+</div>
+<div class="p-2 tw-flex tw-flex-col tw-gap-3">
+    <button type="button" class="btn_no_outline !tw-rounded-none"><a href="{% url 'core:cart-view' %}">CART</a>
+    </button>
+    <a href="{% url 'core:check-out' %}">
+        <button type="button"
+                class="tw-bg-white tx-w-full tw-text-auth_btn tw-rounded-none tw-p-3 tw-text-sm tw-font-primary tw-border tw-border-auth_btn focus:tw-outline-none tw-text-center focus:tw-border-primary">
+            CHECKOUT
+        </button>
+    </a>
+</div>

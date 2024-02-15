@@ -1,0 +1,67 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}
+    Search found: {{ Books.count }} results for {{ query }}
+{% endblock %}
+
+{% block content %}
+
+    {% include 'layout/navbar.html' %}
+
+    <div class="tw-py-20 tw-flex tw-px-12 tw-flex-col">
+        <div class="tw-flex tw-border-b-2 tw-border-secondary tw-py-8 tw-justify-center tw-items-center">
+            <div class="tw-flex tw-flex-col tw-gap-3">
+                <span class="tw-text-3xl tw-font-primary tw-text-center tw-font-extralight">
+                    Search
+                </span>
+                <form class="border border-dark tw-py-2 tw-px-4 tw-flex tw-gap-10 tw-items-center search-query" method="get" action="{% url 'core:search-view' %}" autocomplete="off">
+                    {% csrf_token %}
+                    <input class="border-0 focus:tw-outline-none tw-font-new" name="search-query" type="text" autocomplete="off">
+                    <button type="submit">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+        <div class="tw-flex tw-justify-center tw-py-3">
+            {{ Books.count }} results
+        </div>
+        <div class="tw-grid md:tw-grid-cols-2 xl:tw-grid-cols-4 tw-gap-2">
+            {% for Book in Books %}
+                <div class="tw-flex tw-flex-col tw-p-2 tw-border tw-border-secondary">
+                    <a href="{% url 'core:detail' Book.bid %}">
+                        <!-- Image Holder -->
+                        <div class="tw-flex tw-justify-center tw-bg-primary tw-py-10">
+                            <img src="{{ Book.image.url }}" alt="book1" class="tw-w-1/2">
+                        </div>
+                        <div class="tw-flex tw-flex-row tw-px-4 tw-py-3">
+                            <div>
+                                <div>
+                                    <h1 class="tw-font-secondary tw-font-medium tw-text-xl  tw-border-b tw-pb-2">
+                                        {{ Book.title }}</h1>
+                                </div>
+                                <p class="tw-font-new  tw-text-sm tw-text-gray-500">{{ Book.author | upper }}</p>
+                            </div>
+                            <div class="tw-flex tw-flex-col tw-justify-start tw-items-end tw-ml-auto tw-w-6/12">
+                                        <span class="tw-font-primary tw-font-medium tw-text-base md:tw-text-base tw-text-price ">₦
+                                            {{ Book.price }}
+                                        </span>
+                            </div>
+                        </div>
+                        <div class="tw-flex tw-w-full align-content-end mt-auto">
+                            <a data-id="{{ Book.bid }}" data-author="{{ Book.author }}"
+                                    data-title="{{ Book.title }}" data-category="{{ Book.category.title }}"
+                                    data-price="{{ Book.price }}"
+                                    data-image="{{ Book.image.url }}" data-url="{% url 'core:add-to-cart' %}" id="cart_btn"
+                               class="tw-flex tw-px-4 tw-py-1 tw-border tw-border-secondary tw-font-primary hover:tw-bg-secondary !tw-text-secondary tw-justify-center hover:!tw-text-primary tw-w-full tw-transition-all tw-duration-500">
+                                Shop Now
+                            </a>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {% include 'layout/footer.html' %}
+{% endblock %}

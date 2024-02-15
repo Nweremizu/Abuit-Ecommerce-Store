@@ -1,0 +1,34 @@
+{% load humanize %}
+{% for Book in products %}
+    <div class="tw-flex tw-flex-col tw-p-2 tw-border tw-border-secondary">
+        <a href="{% url 'core:detail' Book.bid %}">
+            <!-- Image Holder -->
+            <div class="tw-flex tw-justify-center tw-bg-primary tw-py-10">
+                <img src="{{ Book.image.url }}" alt="book1" class="tw-w-1/2">
+            </div>
+            <div class="tw-flex tw-flex-row tw-px-4 tw-py-3">
+                <div>
+                    <div>
+                        <h1 class="tw-font-secondary tw-font-medium tw-text-xl  tw-border-b tw-pb-2">
+                            {{ Book.title }}</h1>
+                    </div>
+                    <p class="tw-font-new  tw-text-sm tw-text-gray-500">{{ Book.author | upper }}</p>
+                </div>
+                <div class="tw-flex tw-flex-col tw-justify-start tw-items-end tw-ml-auto tw-w-6/12">
+                                        <span class="tw-font-primary tw-font-medium tw-text-base md:tw-text-base tw-text-price ">₦
+                                            {{ Book.price | intcomma }}
+                                        </span>
+                </div>
+            </div>
+            <div class="tw-flex tw-w-full align-content-end mt-auto">
+                <a href="#" data-id="{{ Book.bid }}" data-author="{{ Book.author }}"
+                                    data-title="{{ Book.title }}" data-category="{{ Book.category.title }}"
+                                    data-price="{{ Book.price }}"
+                                    data-image="{{ Book.image.url }}" data-url="{% url 'core:add-to-cart' %}" id="cart_btn"
+                   class="tw-flex tw-px-4 tw-py-1 tw-border tw-border-secondary tw-font-primary hover:tw-bg-secondary !tw-text-secondary tw-justify-center hover:!tw-text-primary tw-w-full tw-transition-all tw-duration-500">
+                    Shop Now
+                </a>
+            </div>
+        </a>
+    </div>
+{% endfor %}

@@ -1,0 +1,17 @@
+{% extends 'layout/base_error.html'%}
+{% load static %}
+{% block content %}
+    <div class="tw-flex tw-flex-col tw-justify-center tw-w-full tw-items-center tw-h-screen tw-bg-primary tw-gap-20">
+        <h1 class="tw-font-extrabold tw-text-7xl">404</h1>
+        <img src="{% static 'assests/error/404.svg' %}" alt="404">
+        <a href="#">
+            <div
+                class="tw-flex tw-flex-row tw-w-fit tw-py-1 tw-border-b-2 tw-border-secondary tw-gap-2 tw-items-center">
+                <img src="{% static "assests/main/back_404.svg" %}" alt="back">
+                <div class="tw-flex tw-gap-1 tw-font-primary tw-font-medium">
+                    <span>Go</span><span>Home</span>
+                </div>
+            </div>
+        </a>
+    </div>
+{% endblock %}

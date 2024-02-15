@@ -1,0 +1,104 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+{% block title %}
+	Abuit
+{% endblock %}
+
+{% block content %}
+
+    <!-- Navbar -->
+    {% include 'layout/navbar.html' %}
+    {% include 'layout/messages.html' %}
+    <!-- Hero Section -->
+    <div
+            class="tw-flex tw-flex-col md:tw-flex-row xl:tw-px-40 tw-py-20 tw-px-20 tw-bg-primary tw-gap-8 md:tw-gap-4 tw-items-center tw-justify-center">
+        <div class="tw-flex tw-flex-col tw-justify-center tw-gap-3 tw-w-3/4">
+            <p class="tw-font-secondary tw-text-center tw-text-xs md:tw-text-base md:tw-text-start">Find the books that
+                will change your
+                life at
+                Abiut</p>
+            <h1
+                    class="tw-font-primary tw-font-medium md:tw-text-start tw-text-center tw-text-xl md:tw-text-4xl xl:tw-text-6xl">
+                Escape
+                into a World of
+                Self-Discovery and
+                Transformation</h1>
+            <div class="tw-flex tw-justify-center md:tw-justify-start md:mt-3">
+                <a href="{% url 'core:books' %}"
+                   class="tw-flex tw-px-4 tw-py-1 tw-font-primary tw-rounded-full tw-bg-secondary !tw-text-primary hover:tw-animate-wiggle">
+                    Shop Now
+                </a>
+            </div>
+        </div>
+        <div class="tw-w-3/5 md:tw-w-1/2 ">
+            <img src="{% static 'assests/main/books/book_group.png' %}" alt="Books">
+        </div>
+    </div>
+
+    <!-- Products -->
+    <div class="tw-flex tw-flex-col tw-px-14 xl:tw-px-20 tw-py-10 tw-gap-7">
+        <div class="tw-text-center">
+            <h1 class="tw-font-primary tw-font-light tw-text-2xl md:tw-text-4xl xl:tw-text-6xl">Our Books</h1>
+        </div>
+        <!-- Container  -->
+        <div class="tw-grid md:tw-grid-cols-2 xl:tw-grid-cols-4 gap-4">
+            {% for book in books %}
+                <div class="tw-flex tw-flex-col tw-p-2 tw-border tw-border-secondary">
+                    <!-- Image Holder -->
+                    <a href="{% url 'core:detail' book.bid %}">
+                        <div class="tw-flex tw-justify-center tw-bg-primary tw-py-10">
+
+                            <img src="{{ book.image.url }}" alt="book1" class="tw-w-1/2">
+                        </div>
+                    </a>
+                    <a href="{% url 'core:detail' book.bid %}">
+                        <div class="tw-flex tw-flex-col tw-justify-between" style="height: 100%">
+                            <div class="tw-flex tw-flex-row tw-px-4 tw-py-3">
+                                <div>
+                                    <div>
+                                        <h1 class="tw-font-secondary tw-font-medium tw-text-xl  tw-border-b tw-pb-2">{{ book.title }}</h1>
+                                    </div>
+                                    <p class="tw-font-primary  tw-text-sm tw-text-gray-500">{{ book.author | upper }}</p>
+                                </div>
+                                <div class="tw-flex tw-flex-col tw-justify-start tw-items-end tw-ml-auto tw-w-6/12">
+                                <span class="tw-font-primary tw-font-medium tw-text-base md:tw-text-xl tw-text-price ">₦
+                                    {{ book.price }}</span>
+                                </div>
+                            </div>
+                            <div class="tw-flex tw-w-full">
+                                <a  data-id="{{ book.bid }}" data-author="{{ book.author }}"
+                                    data-title="{{ book.title }}" data-category="{{ book.category.title }}"
+                                    data-price="{{ book.price }}"
+                                    data-image="{{ book.image.url }}" data-url="{% url 'core:add-to-cart' %}" id="cart_btn"
+                                   class="tw-flex tw-px-4 tw-py-1 tw-border tw-border-secondary tw-font-primary hover:tw-bg-secondary !tw-text-secondary tw-justify-center hover:!tw-text-primary tw-w-full tw-transition-all tw-duration-500">Shop Now
+                                </a>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div
+            class="tw-relative tw-px-20 tw-py-20 tw-bg-primary tw-flex tw-flex-col md:tw-flex-row tw-justify-center md:tw-justify-between tw-gap-4">
+        <div class="tw-flex tw-flex-col tw-gap-8 md:tw-w-1/2">
+            <h1 class="tw-font-primary tw-text-5xl">Deciding what to read next?</h1>
+            <p class="tw-font-secondary xl:tw-w-1/2">You’re in the right place. Tell us what titles or genres you’ve
+                enjoyed in the
+                past, and we’ll give
+                you surprisingly insightful recommendations.</p>
+        </div>
+        <div
+                class="tw-relative tw-z-10 tw-flex md:tw-px-14 tw-bg-secondary tw-rounded-3xl tw-justify-center tw-py-16 md:tw-items-center tw-w-fit tw-self-center tw-px-14">
+            <a href="{% url 'core:books' %}">
+                <img src="{% static 'assests/main/arrow.svg' %}" alt="arrow">
+            </a>
+        </div>
+        <img src="{% static 'assests/main/question.svg' %}" alt="mark"
+             class="tw-absolute tw-right-2 tw-top-0 -tw-bottom-1 md:tw-bottom-2 tw-max-w-max">
+    </div>
+
+    <!-- Footer -->
+    {% include 'layout/footer.html' %}
+
+{% endblock %}
