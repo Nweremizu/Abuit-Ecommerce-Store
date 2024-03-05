@@ -1,5 +1,5 @@
 from django.contrib import admin
-from core.models import Book, Category, CartOrder, CartOrderItem, Address
+from core.models import Book, Category, CartOrder, CartOrderItem, Address, Payment, UserWallet
 
 
 # Register your models here.
@@ -28,8 +28,13 @@ class AddressAdmin(admin.ModelAdmin):
     list_display = ["user", "address", "city", "state", "zipcode", "country", "phone", "status"]
 
 
+class PaystackAdmin(admin.ModelAdmin):
+    list_display = ["id", "ref", "amount", "verified", "date_created",]
+
 admin.site.register(Book, BookAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(CartOrder, CartOrderAdmin)
 admin.site.register(CartOrderItem, CartOrderItemAdmin)
 admin.site.register(Address, AddressAdmin)
+admin.site.register(Payment, PaystackAdmin)
+admin.site.register(UserWallet)

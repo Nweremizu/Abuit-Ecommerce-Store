@@ -1,10 +1,13 @@
+import json
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 
 from core.forms import ShippingAddressForm
-from core.models import Book, CartOrder, CartOrderItem, Address, Category
+from core.models import Book, CartOrder, CartOrderItem, Address, Category, UserWallet, Payment
+from abuit_user.models import User
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.conf import settings
@@ -12,10 +15,6 @@ from django.views.decorators.csrf import csrf_exempt
 from paypal.standard.forms import PayPalPaymentsForm
 from core.conversion import paypalCurrencyConverter
 from core.forms import ExtraPayPalForm
-
-
-def custom_404(request, exception):
-    return render(request, 'error/404.html', status=404)
 
 
 # Create your views here.
@@ -28,11 +27,56 @@ def index(request):
     return render(request, "core/index.html", context)
 
 
+def get_csrf_token(request):
+    return JsonResponse({'csrf_token': request.csrf_token})
+
+
 def profile(request):
     if not request.user.is_authenticated:
         return redirect('abuit_user:login')
     user = request.user
-    return render(request, "core/profile.html", {"user": user})
+    orders = CartOrder.objects.filter(user=user)
+    context = {
+        "user": user,
+        "orders": orders,
+    }
+    return render(request, "core/profile.html", context)
+
+
+def delete_order(request, order_id):
+    order_id = int(order_id)
+    order = get_object_or_404(CartOrder, id=order_id)
+    order.delete()
+    return JsonResponse({'success': True})
+
+def edit_account_details(request):
+    if request.method == 'POST':
+        try:
+            # Parse JSON data
+            data = json.loads(request.body)
+
+            # Get individual data fields
+            username = data.get('username')
+            if User.objects.filter(username=username).exclude(id=request.user.id).exists():
+                return redirect('core:profile')
+            email = data.get('email')
+            first_name = data.get('first_name')
+            last_name = data.get('last_name')
+
+            # Save data to database (assuming you have a Profile model)
+            # Replace 'Profile' with your actual model name
+            user = get_object_or_404(User, id=request.user.id)
+            user.username = username
+            user.email = email
+            user.first_name = first_name
+            user.last_name = last_name
+            user.save()
+
+            return JsonResponse({'success': True})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+    else:
+        return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)
 
 
 def books_list(request):
@@ -188,18 +232,29 @@ def delete_cart_item(request):
 
 def check_cart(request):
     cart_is_empty = {}
-    if request.session['cart_data_obj']:
-        if len(request.session['cart_data_obj']) == 0:
-            cart_is_empty = {"cart_is_empty": 1}
-            request.session["cart_is_empty"] = cart_is_empty
+    try:
+        if request.session['cart_data_obj']:
+            if len(request.session['cart_data_obj']) == 0:
+                cart_is_empty = {"cart_is_empty": 1}
+                request.session["cart_is_empty"] = cart_is_empty
+            else:
+                cart_is_empty = {"cart_is_empty": 0}
+                request.session["cart_is_empty"] = cart_is_empty
+            return JsonResponse({
+                "data": cart_is_empty,
+            })
         else:
-            cart_is_empty = {"cart_is_empty": 0}
-            request.session["cart_is_empty"] = cart_is_empty
+            request.session['cart_data_obj'] = {}
+    except KeyError:
+        request.session['cart_data_obj'] = {}
+        cart_is_empty = {"cart_is_empty": 1}
+        request.session["cart_is_empty"] = cart_is_empty
         return JsonResponse({
             "data": cart_is_empty,
         })
-    else:
-        request.session['cart_data_obj'] = {}
+    return JsonResponse({
+        "data": cart_is_empty,
+    })
 
 
 def side_cart(request):
@@ -313,3 +368,5 @@ def payment_success(request):
 @login_required
 def payment_declined(request):
     return render(request, 'core/payment_declined.html')
+
+

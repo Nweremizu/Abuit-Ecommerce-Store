@@ -1,3 +1,5 @@
+import secrets
+
 from django.db import models
 from django.utils import timezone
 from shortuuid.django_fields import ShortUUIDField
@@ -98,7 +100,6 @@ class CartOrderItem(models.Model):
         return self.invoice_number
 
 
-
 class Address(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     address = models.CharField(max_length=100, null=True)
@@ -111,3 +112,56 @@ class Address(models.Model):
 
     class Meta:
         verbose_name_plural = "Address"
+
+
+class UserWallet(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    currency = models.CharField(max_length=100, default="NGN")
+    amount = models.DecimalField(max_digits=99999, decimal_places=2, default="0.00")
+    created_at = models.DateTimeField(default=timezone.now, null=True, blank=True)
+
+    class Meta:
+        verbose_name_plural = "User Wallet"
+
+    def __str__(self):
+        return self.user.username
+
+
+class Payment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    amount = models.PositiveIntegerField()
+    ref = models.CharField(max_length=200)
+    email = models.EmailField(max_length=200)
+    verified = models.BooleanField(default=False)
+    date_created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural = "Payment"
+        ordering = ['-date_created']
+
+    def __str__(self):
+        return f"Payment of {self.amount} by {self.user.username}"
+
+    def save(self, *args, **kwargs):
+        while not self.ref:
+            ref = secrets.token_urlsafe(50)
+            object_with_similar_ref = Payment.objects.filter(ref=ref)
+            if not object_with_similar_ref:
+                self.ref = ref
+
+        super().save(*args, **kwargs)
+
+    def amount_value(self):
+        return int(self.amount) * 100
+
+    def verify_payment(self):
+        from core.paystack import Paystack
+        paystack = Paystack()
+        status, data = paystack.verify_transaction(self.ref)
+        if status:
+            if data['amount'] /100 == self.amount:
+                self.verified = True
+            self.save()
+        if self.verified:
+            return True
+        return False

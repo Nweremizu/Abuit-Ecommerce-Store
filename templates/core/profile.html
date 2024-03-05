@@ -3,10 +3,11 @@
 {% load humanize %}
 {% block title %}
     Account
+
 {% endblock %}
 {% block content %}
     {% include 'layout/navbar.html' %}
-    <section class="tz-flex tz-h-screen tz-py-16">
+    <section class="tz-flex tw-h-full tz-py-16">
         <div class="tz-flex tz-flex-col tz-gap-8 tz-items-center tz-w-full tz-font-primary">
             <h1 class="tz-text-3xl">My Account</h1>
             <div class="tz-flex tz-flex-col md:tz-flex-row tz-gap-4 tz-w-full md:tz-px-20 lg:tz-px-48 tz-divide-x ">
@@ -24,7 +25,7 @@
                         <div class="tz-px-6 tz-py-3 tz-flex tz-flex-col tz-gap-8">
                             <div class="tz-flex tz-justify-between tz-w-full">
                                 <h1 class="tz-text-4xl">Welcome {{ user.username }}</h1>
-                                <button id="edit"
+                                <button id="editb"
                                         class="tz-py-2 tz-px-4 tz-border-2 tz-border-transparent tz-bg-auth_btn tz-transition-all tz-ease-in tz-text-white hover:tz-border-2 hover:tz-border-black tz-duration-500">
                                     Edit
                                     Details
@@ -106,7 +107,7 @@
                             </div>
                         </div>
                         <div class="tz-flex tz-w-full tz-justify-end tz-px-6 ">
-                            <button id="save"
+                            <button id="saveb" data-user="{{ user.id }}"
                                     class="tz-hidden tz-py-2 tz-px-4 tz-border-2 tz-border-transparent tz-bg-auth_btn  tz-text-white ">
                                 Save
                             </button>
@@ -122,34 +123,29 @@
                                         S/N.
                                     </th>
                                     <th>
-                                        Invoice Number
+                                        Date Ordered
                                     </th>
                                     <th>
-                                        Book
+                                        Paid Status
                                     </th>
                                     <th>
-                                        Quantity
+                                        Total Amount
                                     </th>
                                     <th>
-                                        Price
+                                        Action
                                     </th>
                                 </tr>
                                 </thead>
                                 <tbody class="tz-divide-y">
-                                <tr>
-                                    <td>1.</td>
-                                    <td>Invoice-No-58</td>
-                                    <td>Atomic Habits</td>
-                                    <td>2</td>
-                                    <td>₦10000</td>
-                                </tr>
-                                <tr>
-                                    <td>2.</td>
-                                    <td>Invoice-No-58</td>
-                                    <td>Atomic Habits</td>
-                                    <td>2</td>
-                                    <td>₦10000</td>
-                                </tr>
+                                {% for o in orders %}
+                                    <tr>
+                                        <td>{{ o.id }}</td>
+                                        <td>{{ o.order_date }}</td>
+                                        <td>{{ o.paid }}</td>
+                                        <td>₦{{ o.total_amount|intcomma }}</td>
+                                        <td><a href="javascript:void(0)">View</a></td>
+                                    </tr>
+                                {% endfor %}
                                 </tbody>
                             </table>
                         </div>
@@ -161,47 +157,96 @@
     </section>
     {% include 'layout/footer.html' %}
     <script>
-        // undisabled all input fields if the edit btn is clicked
-        const edit_btn = document.getElementById('edit')
-        const save_btn = document.getElementById('save')
-        edit_btn.addEventListener('click', () => {
-            const inputs = document.querySelectorAll('input')
-            inputs.forEach(input => {
-                input.disabled = false
-            })
-            save_btn.classList.toggle('tz-hidden')
-            save_btn.classList.toggle('tz-flex')
-            edit_btn.classList.toggle('tz-hidden')
-        })
-
-        save_btn.addEventListener('click', () => {
-            const inputs = document.querySelectorAll('input')
-            inputs.forEach(input => {
-                input.disabled = true
-            })
-            edit_btn.classList.toggle('tz-hidden')
-            edit_btn.classList.toggle('tz-flex')
-            save_btn.classList.toggle('tz-hidden')
-        })
-
-
-        const overview = document.getElementById('overview');
-        const orders = document.getElementById('orders');
+        const saveBtn = document.querySelector('#saveb');
+        const inputs = document.querySelectorAll('input');
+        const editBtn = document.querySelector('#editb');
+        const overview = document.querySelector('#overview');
+        const orders = document.querySelector('#orders');
         const overviewBtn = document.querySelector('.active');
         const ordersBtn = document.querySelector('.inactive');
 
-        overviewBtn.addEventListener('click', () => {
+        // Function to handle edit button click
+        // Function to get CSRF token from cookies
+        function getCSRFToken() {
+            const csrfTokenCookie = document.cookie.split('; ')
+                .find(cookie => cookie.startsWith('csrftoken='));
+            if (csrfTokenCookie) {
+                return csrfTokenCookie.split('=')[1];
+            } else {
+                console.error('CSRF token not found in cookies');
+                return null;
+            }
+        }
+
+
+        function handleEditClick() {
+            inputs.forEach(input => {
+                input.disabled = false;
+            });
+            toggleVisibility(saveBtn);
+            toggleVisibility(editBtn);
+        }
+
+        // Function to handle save button click
+        function handleSaveClick() {
+            const formData = {};
+            formData['username'] = document.querySelector('#username').value;
+            formData['email'] = document.querySelector('#email').value;
+            formData['first_name'] = document.querySelector('#fname').value;
+            formData['last_name'] = document.querySelector('#lname').value;
+
+
+            fetch('/app/edit_profile/', {
+                method: 'POST',
+                body: JSON.stringify(formData),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCSRFToken()
+                }
+            })
+                .then(response => {
+                    if (response.ok) {
+                        inputs.forEach(input => {
+                            input.disabled = true;
+                        });
+                        toggleVisibility(saveBtn);
+                        toggleVisibility(editBtn);
+                    } else {
+                        console.error('Error saving profile');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error saving profile:', error);
+                });
+        }
+
+        // Function to toggle visibility of an element
+        function toggleVisibility(element) {
+            element.classList.toggle('tz-hidden');
+            element.classList.toggle('tz-flex');
+        }
+
+        // Function to handle overview button click
+        function handleOverviewClick() {
             overview.classList.remove('tz-hidden');
             orders.classList.add('tz-hidden');
             overviewBtn.classList.add('active');
             ordersBtn.classList.remove('active');
-        });
+        }
 
-        ordersBtn.addEventListener('click', () => {
+        // Function to handle orders button click
+        function handleOrdersClick() {
             overview.classList.add('tz-hidden');
             orders.classList.remove('tz-hidden');
             overviewBtn.classList.remove('active');
             ordersBtn.classList.add('active');
-        });
+        }
+
+        // Event listeners
+        editBtn.addEventListener('click', handleEditClick);
+        saveBtn.addEventListener('click', handleSaveClick);
+        overviewBtn.addEventListener('click', handleOverviewClick);
+        ordersBtn.addEventListener('click', handleOrdersClick);
+
     </script>
 {% endblock %}

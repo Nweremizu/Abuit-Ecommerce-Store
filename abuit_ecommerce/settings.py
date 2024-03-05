@@ -137,3 +137,6 @@ AUTH_USER_MODEL = 'abuit_user.User'
 
 PAYPAL_RECEIVER_EMAIL = 'sb-ilbpd29203189@business.example.com'
 PAYPAL_TEST = True
+
+PAYSTACK_PUBLIC_KEY = "pk_test_3b445890fdc150f740ebfdaec8322e159437c670"
+PAYSTACK_SECRET_KEY = "sk_test_0ec1462e323a2d9a13cecd7aeb076223dd943df7"
