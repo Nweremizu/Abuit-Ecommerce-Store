@@ -71,30 +71,34 @@
                                     <input type="number" id="phone-no"
                                            class=" tz-px-4 tz-py-2 tz-border tz-border-black
                                         focus:tz-border-2 focus:tz-border-primary focus:tz-outline-none !tz-appearance-none"
-                                           value="" disabled>
+                                           value="{{ address.phone }}" disabled>
                                 </div>
                                 <div class="tz-flex tz-flex-col tz-gap-1">
                                     <label for="Address" class="tz-font-medium">Address Line</label>
                                     <input type="text" id="Address" class=" tz-px-4 tz-py-2 tz-border tz-border-black
-                                        focus:tz-border-2 focus:tz-border-primary focus:tz-outline-none" value=""
+                                        focus:tz-border-2 focus:tz-border-primary focus:tz-outline-none"
+                                           value="{{ address.address }}"
                                            disabled>
                                 </div>
                                 <div class="tz-flex tz-flex-col tz-gap-1">
                                     <label for="country" class="tz-font-medium">Country</label>
                                     <input type="text" id="country" class=" tz-px-4 tz-py-2 tz-border tz-border-black
-                                        focus:tz-border-2 focus:tz-border-primary focus:tz-outline-none" value=""
+                                        focus:tz-border-2 focus:tz-border-primary focus:tz-outline-none"
+                                           value="{{ address.country }}"
                                            disabled>
                                 </div>
                                 <div class="tz-flex tz-flex-col tz-gap-1">
                                     <label for="city" class="tz-font-medium">City</label>
                                     <input type="text" id="city" class=" tz-px-4 tz-py-2 tz-border tz-border-black
-                                        focus:tz-border-2 focus:tz-border-primary focus:tz-outline-none" value=""
+                                        focus:tz-border-2 focus:tz-border-primary focus:tz-outline-none"
+                                           value="{{ address.city }}"
                                            disabled>
                                 </div>
                                 <div class="tz-flex tz-flex-col tz-gap-1">
                                     <label for="state" class="tz-font-medium">State</label>
                                     <input type="text" id="state" class=" tz-px-4 tz-py-2 tz-border tz-border-black
-                                        focus:tz-border-2 focus:tz-border-primary focus:tz-outline-none" value=""
+                                        focus:tz-border-2 focus:tz-border-primary focus:tz-outline-none"
+                                           value="{{ address.state }}"
                                            disabled>
                                 </div>
                                 <div class="tz-flex tz-flex-col tz-gap-1">
@@ -102,8 +106,12 @@
                                     <input type="number" id="postal-code"
                                            class=" tz-px-4 tz-py-2 tz-border tz-border-black
                                         focus:tz-border-2 focus:tz-border-primary focus:tz-outline-none tz-appearance-none"
-                                           value="" disabled>
+                                           value="{{ address.zipcode }}" disabled>
                                 </div>
+                            </div>
+                            <h1>Order Analysis</h1>
+                            <div class="tz-flex tz-flex-col tz-gap-1">
+                                <canvas id="myChart" width="100" height="50"></canvas>
                             </div>
                         </div>
                         <div class="tz-flex tz-w-full tz-justify-end tz-px-6 ">
@@ -134,6 +142,9 @@
                                     <th>
                                         Action
                                     </th>
+                                    <th>
+                                        Delete
+                                    </th>
                                 </tr>
                                 </thead>
                                 <tbody class="tz-divide-y">
@@ -141,9 +152,18 @@
                                     <tr>
                                         <td>{{ o.id }}</td>
                                         <td>{{ o.order_date }}</td>
-                                        <td>{{ o.paid }}</td>
+                                        {% if o.paid %}
+                                            <td>Paid</td>
+                                        {% else %}
+                                            <td>Not Paid</td>
+                                        {% endif %}
                                         <td>₦{{ o.total_amount|intcomma }}</td>
-                                        <td><a href="javascript:void(0)">View</a></td>
+                                        <td><a href="{% url 'core:order-details' o.id %}">View</a></td>
+                                        {% if not o.paid %}
+                                            <td><a href="{% url 'core:delete-order' o.id %}">Delete</a></td>
+                                        {% else %}
+                                            <td>Already Paid</td>
+                                        {% endif %}
                                     </tr>
                                 {% endfor %}
                                 </tbody>
@@ -194,6 +214,12 @@
             formData['email'] = document.querySelector('#email').value;
             formData['first_name'] = document.querySelector('#fname').value;
             formData['last_name'] = document.querySelector('#lname').value;
+            formData['phone_no'] = document.querySelector('#phone-no').value;
+            formData['address'] = document.querySelector('#Address').value;
+            formData['country'] = document.querySelector('#country').value;
+            formData['city'] = document.querySelector('#city').value;
+            formData['state'] = document.querySelector('#state').value;
+            formData['zip_code'] = document.querySelector('#postal-code').value;
 
 
             fetch('/app/edit_profile/', {
@@ -248,5 +274,30 @@
         overviewBtn.addEventListener('click', handleOverviewClick);
         ordersBtn.addEventListener('click', handleOrdersClick);
 
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('myChart');
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: {{ monthly_order|safe }},
+                datasets: [{
+                    label: 'Monthly Orders',
+                    data: {{ total_order|safe }},
+                    backgroundColor: "rgba(76, 99, 46, 0.5 )",
+                    borderColor: "rgba(76, 99,46, 1)",
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
     </script>
 {% endblock %}

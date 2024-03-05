@@ -15,6 +15,9 @@ from django.views.decorators.csrf import csrf_exempt
 from paypal.standard.forms import PayPalPaymentsForm
 from core.conversion import paypalCurrencyConverter
 from core.forms import ExtraPayPalForm
+import calendar
+from django.db.models import Count,Avg
+from django.db.models.functions import ExtractMonth
 
 
 # Create your views here.
@@ -35,19 +38,44 @@ def profile(request):
     if not request.user.is_authenticated:
         return redirect('abuit_user:login')
     user = request.user
-    orders = CartOrder.objects.filter(user=user)
+    orders = CartOrder.objects.filter(user=user).order_by("-order_date")
+    address = Address.objects.filter(user=user).first()
+
+    orderr = CartOrder.objects.annotate(month=ExtractMonth('order_date')).values('month').annotate(count=Count('id')).values('month', 'count')
+    monthly_order = []
+    total_order = []
+    for o in orderr:
+        monthly_order.append(calendar.month_name[o['month']])
+        total_order.append(o['count'])
+    print(monthly_order)
+    print(total_order)
     context = {
         "user": user,
         "orders": orders,
+        "address": address,
+        "monthly_order": monthly_order,
+        "total_order": total_order,
     }
     return render(request, "core/profile.html", context)
 
 
-def delete_order(request, order_id):
-    order_id = int(order_id)
+def delete_order(request, oid):
+    order_id = int(oid)
     order = get_object_or_404(CartOrder, id=order_id)
     order.delete()
-    return JsonResponse({'success': True})
+    return redirect('core:profile')
+
+
+def order_details(request, oid):
+    order_id = int(oid)
+    order = get_object_or_404(CartOrder, id=order_id)
+    order_items = CartOrderItem.objects.filter(order=order)
+    context = {
+        "order": order,
+        "order_items": order_items
+    }
+    return render(request, "core/order_detail.html", context)
+
 
 def edit_account_details(request):
     if request.method == 'POST':
@@ -63,7 +91,6 @@ def edit_account_details(request):
             first_name = data.get('first_name')
             last_name = data.get('last_name')
 
-            # Save data to database (assuming you have a Profile model)
             # Replace 'Profile' with your actual model name
             user = get_object_or_404(User, id=request.user.id)
             user.username = username
@@ -71,6 +98,29 @@ def edit_account_details(request):
             user.first_name = first_name
             user.last_name = last_name
             user.save()
+
+            if Address.objects.filter(user=request.user).exists():
+                address = Address.objects.get(user=request.user)
+                # if the input data is not empty, update the address and do for each
+                if data.get('address') != "":
+                    address.address = data.get('address')
+                if data.get('city') != "":
+                    address.city = data.get('city')
+                if data.get('state') != "":
+                    address.state = data.get('state')
+                if data.get('zip_code') != "":
+                    address.zipcode = data.get('zip_code')
+                if data.get('country') != "":
+                    address.country = data.get('country')
+                if data.get('phone_no') != "":
+                    address.phone = data.get('phone_no')
+                address.save()
+            else:
+                address = Address.objects.create(user=request.user,
+                                                 address=data.get('address'), city=data.get('city'),
+                                                 state=data.get('state'), zipcode=data.get('zip_code'),
+                                                 country=data.get('country'), phone=data.get('phone_no'))
+                address.save()
 
             return JsonResponse({'success': True})
         except Exception as e:
@@ -322,9 +372,10 @@ def checkout_view(request):
     }
     paypal_payment_button = ExtraPayPalForm(initial=paypal_dict)
 
+
+
     user = request.user
-    first_name = user.first_name
-    last_name = user.last_name
+    address = Address.objects.filter(user=user).first()
 
     context = {
         "cart_data": cart_data,
@@ -333,6 +384,8 @@ def checkout_view(request):
         "shipping_cost": shipping_cost,
         "full_total": full_total,
         "paypal_payment_button": paypal_payment_button,
+        "user": user,
+        "address": address,
     }
     return render(request, 'core/checkout.html', context)
 
@@ -368,5 +421,3 @@ def payment_success(request):
 @login_required
 def payment_declined(request):
     return render(request, 'core/payment_declined.html')
-
-

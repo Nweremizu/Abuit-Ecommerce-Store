@@ -110,7 +110,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+# Time zone for Nigeria
+TIME_ZONE = 'Africa/Lagos'
 
 USE_I18N = True
 

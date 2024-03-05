@@ -75,7 +75,7 @@ class CartOrder(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     total_amount = models.DecimalField(max_digits=99999, decimal_places=2, default="0.00")
     paid = models.BooleanField(default=False)
-    order_date = models.DateTimeField(auto_now_add=True)
+    order_date = models.DateTimeField(auto_now_add=True, editable=True)
 
     class Meta:
         verbose_name_plural = "Cart Order"
@@ -112,6 +112,11 @@ class Address(models.Model):
 
     class Meta:
         verbose_name_plural = "Address"
+
+    def verify_address(self):
+        if self.address and self.city and self.state and self.zipcode and self.country and self.phone:
+            self.status = True
+        self.save()
 
 
 class UserWallet(models.Model):

@@ -19,48 +19,48 @@
                         <div class="tx-flex md:tx-flex-row tx-flex-col tx-gap-4 tx-w-full">
                             <div class="tx-flex tx-flex-col tx-gap-2 tx-w-full">
                                 <label for="fname" class="tx-font-primary tx-text-sm tx-font-medium">First Name</label>
-                                <input type="text" placeholder="" id="fname"
+                                <input type="text" placeholder="" id="fname" value="{{ user.first_name }}"
                                        class="tx-border tx-border-secondary tx-py-2.5 tx-px-4 tx-rounded-md tx-w-full tx-outline-none">
-                            </div>
+                            </div>  
                             <div class="tx-flex tx-flex-col tx-gap-2 tx-w-full">
                                 <label for="lname" class="tx-font-primary tx-text-sm tx-font-medium">Last Name</label>
-                                <input type="text" placeholder="" id="lname"
+                                <input type="text" placeholder="" id="lname" value="{{ user.last_name }}"
                                        class="tx-border tx-border-secondary tx-py-2.5 tx-px-4 tx-rounded-md tx-w-full tx-outline-none">
                             </div>
                         </div>
                         <div class="tx-flex tx-flex-col tx-gap-2 tx-w-full">
-                            <label for="phone-no" class="tx-font-primary tx-text-sm tx-font-medium">Phone Number</label>
-                            <input type="text" placeholder="" id="phone-no"
+                            <label for="phone-no" class="tx-font-primary tx-text-sm tx-font-medium">Email</label>
+                            <input type="email" placeholder="" id="email" value="{{ user.email }}"
                                    class="tx-border tx-border-secondary tx-py-2.5 tx-px-4 tx-rounded-md tx-w-full tx-outline-none">
                         </div>
                         <div class="tx-flex tx-flex-col tx-gap-2 tx-w-full">
                             <label for="address" class="tx-font-primary tx-text-sm tx-font-medium">Address Line
                                 1</label>
-                            <input type="text" placeholder="" id="address"
+                            <input type="text" placeholder="" id="address" value="{{ address.address }}"
                                    class="tx-border tx-border-secondary tx-py-2.5 tx-px-4 tx-rounded-md tx-w-full tx-outline-none">
                         </div>
                         <div class="tx-flex md:tx-flex-row tx-flex-col tx-gap-4 tx-w-full">
                             <div class="tx-flex tx-flex-col tx-gap-2 tx-w-full">
                                 <label for="country" class="tx-font-primary tx-text-sm tx-font-medium">Country</label>
-                                <input type="text" placeholder="" id="country"
+                                <input type="text" placeholder="" id="country" value="{{ address.country }}"
                                        class="tx-border tx-border-secondary tx-py-2.5 tx-px-4 tx-rounded-md tx-w-full tx-outline-none">
                             </div>
                             <div class="tx-flex tx-flex-col tx-gap-2 tx-w-full">
                                 <label for="city" class="tx-font-primary tx-text-sm tx-font-medium">City</label>
-                                <input type="text" placeholder="" id="city"
+                                <input type="text" placeholder="" id="city" value="{{ address.city }}"
                                        class="tx-border tx-border-secondary tx-py-2.5 tx-px-4 tx-rounded-md tx-w-full tx-outline-none">
                             </div>
                         </div>
                         <div class="tx-flex md:tx-flex-row tx-flex-col tx-gap-4 tx-w-full">
                             <div class="tx-flex tx-flex-col tx-gap-2 tx-w-full">
                                 <label for="state" class="tx-font-primary tx-text-sm tx-font-medium">State</label>
-                                <input type="text" placeholder="" id="state"
+                                <input type="text" placeholder="" id="state" value="{{ address.state }}"
                                        class="tx-border tx-border-secondary tx-py-2.5 tx-px-4 tx-rounded-md tx-w-full tx-outline-none">
                             </div>
                             <div class="tx-flex tx-flex-col tx-gap-2 tx-w-full">
                                 <label for="postal_code" class="tx-font-primary tx-text-sm tx-font-medium">Postal
                                     code</label>
-                                <input type="number" placeholder="" id="postal_code"
+                                <input type="number" placeholder="" id="postal_code" value="{{ address.zipcode }}"
                                        class="tx-border tx-border-secondary tx-py-2.5 tx-px-4 tx-rounded-md tx-w-full tx-outline-none">
                             </div>
                         </div>

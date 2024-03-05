@@ -1,0 +1,72 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+{% load humanize %}
+{% block title %}
+    Order Details
+
+{% endblock %}
+{% block content %}
+    {% include 'layout/navbar.html' %}
+    <section class="tz-flex tw-h-full tz-py-16">
+        
+        <div class="tz-flex tz-flex-col tz-gap-8 tz-items-center tz-w-full tz-font-primary">
+        <div class="tz-flex tz-w-full tz-justify-end tz-px-6 ">
+            <a href="{% url 'core:profile' %}"><button
+                    class="tz-flex tz-py-2 tz-px-4 tz-border-2 tz-border-transparent tw-bg-secondary tz-text-white ">
+                Back
+            </button></a>
+        </div>
+            <h1 class="tz-text-3xl">My Account</h1>
+            <div class="tz-flex tz-flex-col md:tz-flex-row tz-gap-4 tz-w-full md:tz-px-20 lg:tz-px-48 tz-divide-x ">
+                <div
+                        class="tz-flex tz-flex-row md:tz-flex-col  md:tz-w-1/4 tz-font-medium tz-w-full tz-justify-center md:tz-justify-start">
+                    <div class="tz-px-6 tz-py-3 inactive">
+                        Items Ordered On {{ order.order_date }}
+                    </div>
+                </div>
+                <div class="tz-w-full md:tz-w-3/4">
+                    <div class="tz-flex tz-flex-col tz-gap-3" id="orders">
+                        <div class="md:tz-px-6 tz-py-3 tz-flex tz-flex-col tz-gap-8">
+                            <h1 class="tz-text-4xl">Your Order Items</h1>
+                            <table class="tz-table-auto">
+                                <thead class="tz-bg-zinc-300 tz-rounded-t">
+                                <tr>
+                                    <th>
+                                        Invoice No.
+                                    </th>
+                                    <th>
+                                        Name
+                                    </th>
+                                    <th>
+                                        Image
+                                    </th>
+                                    <th>
+                                        Price
+                                    </th>
+                                    <th>
+                                        Total Price
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody class="tz-divide-y">
+                                {% for o in order_items %}
+                                    <tr>
+                                        <td>{{ o.invoice_number }}</td>
+                                        <td>{{ o.book.title }}</td>
+                                        <td><img src="{{ o.image }}" width="50"></td>
+
+                                        <td>{{ o.quantity }} x ₦{{ o.price| intcomma }}</td>
+                                        <td>{{ o.total| intcomma }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    {% include 'layout/footer.html' %}
+{% endblock %}

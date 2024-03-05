@@ -19,6 +19,7 @@ class CartOrderAdmin(admin.ModelAdmin):
     list_display = ["user", "total_amount", "paid", "order_date"]
 
 
+
 class CartOrderItemAdmin(admin.ModelAdmin):
     list_display = ["order", "invoice_number", "book", "quantity", "price", "total", "order_item_image"]
 

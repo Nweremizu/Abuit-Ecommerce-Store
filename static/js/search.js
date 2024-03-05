@@ -159,17 +159,13 @@ $(document).ready(function () {
 
 //     Add to Cart Button
     $('#add_to_cart_btn').on('click', function () {
-        let quantity = 1
         let book_id = $(this).data('id')
         let book_price = $(this).data('price')
         let book_title = $(this).data('title')
         let book_image = $(this).data('image')
         let book_author = $(this).data('author')
         let book_category = $(this).data('category')
-        if ($('#quan').val() !== null) {
-            quantity = 1
-        }
-
+        let quantity = $('#quan').val()
         let book_data = {
             'book_id': book_id,
             'book_price': book_price,
